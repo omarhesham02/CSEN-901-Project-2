@@ -37,7 +37,7 @@ pour(1, 2) :-
         )
         ;
         % Case 4: [e, Bottom1] -> [e, e]
-        (Top1 = e, Bottom1 \= e,
+        (Top1 = e, Bottom1 \= e, Top2 = e, Bottom2 = e,
             retract(bottle1(Top1, Bottom1)),
             retract(bottle2(Top2, Bottom2)),
             assert(bottle1(e, e)),
@@ -275,15 +275,15 @@ is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3
 result(Action, Situation).
 
 
-search(State, Situation, NextState) :-
+search(State, Situation, S) :-
     is_goal_state(State),
-    NextState = Situation.
+    S = Situation.
 
-search(State, Situation, NextState) :-
+search(State, Situation, S) :-
     pour_operation(Pour),
     call(Pour),
     s(NewState),
-    search(NewState, result(Pour, Situation), NextState).
+    search(NewState, result(Pour, Situation), S).
 
 pour_operation(pour(1, 2)).
 pour_operation(pour(1, 3)).
@@ -296,3 +296,4 @@ pour_operation(pour(3, 2)).
 goal(S) :-
     s(InitialState),
     search(InitialState, s0, S).
+    

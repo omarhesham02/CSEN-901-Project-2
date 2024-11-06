@@ -3,11 +3,6 @@
 :- dynamic result/2.
 
 
-s0:-
-    bottle1(Top1, Bottom1),
-    bottle2(Top2, Bottom2),
-    bottle3(Top3, Bottom3).
-
 % ************************************************************ Pour Operations ************************************************************
 
 
@@ -242,22 +237,21 @@ pour(3, 2) :-
 
 % ************************************************************ Main Logic ************************************************************
 
-% Checking if bottle1 is a goal bottle in state `s0`
-is_goal_bottle(bottle1(Top, Bottom), S) :-
+is_goal_bottle(bottle1(Top, Bottom)) :-
     (Top = e, Bottom = e)                
     ;
     (Top = e, Bottom \= e)                 
     ;
     (Top = Bottom, Top \= e).       
 
-is_goal_bottle(bottle2(Top, Bottom), S) :-
+is_goal_bottle(bottle2(Top, Bottom)) :-
     (Top = e, Bottom = e)                 
     ;
     (Top = e, Bottom \= e)                 
     ;
     (Top = Bottom, Top \= e).
 
-is_goal_bottle(bottle3(Top, Bottom), S) :-
+is_goal_bottle(bottle3(Top, Bottom)) :-
     (Top = e, Bottom = e)                 
     ;
     (Top = e, Bottom \= e)                 
@@ -265,23 +259,31 @@ is_goal_bottle(bottle3(Top, Bottom), S) :-
     (Top = Bottom, Top \= e).
 
 
-is_goal_state(S) :-
-    is_goal_bottle(bottle1(Top1, Bottom1), S),
-    is_goal_bottle(bottle2(Top2, Bottom2), S),
-    is_goal_bottle(bottle3(Top3, Bottom3), S).
+s0.
 
-goal(S) :-
-    search(s0, Solution).
+s(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
+    bottle1(Top1, Bottom1),
+    bottle2(Top2, Bottom2),
+    bottle3(Top3, Bottom3).
 
-search(State, State) :-
-    is_goal_state(State).
-
-search(State, result(Action, NextSolution)) :-
-    pour_operation(Action),
-    result(Action, NextState),
-    search(NextState, NextSolution).
+is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
+    is_goal_bottle(bottle1(Top1, Bottom1)),
+    is_goal_bottle(bottle2(Top2, Bottom2)),
+    is_goal_bottle(bottle3(Top3, Bottom3)).
 
 
+result(Action, Situation).
+
+
+search(State, Situation, NextState) :-
+    is_goal_state(State),
+    NextState = Situation.
+
+search(State, Situation, NextState) :-
+    pour_operation(Pour),
+    call(Pour),
+    s(NewState),
+    search(NewState, result(Pour, Situation), NextState).
 
 pour_operation(pour(1, 2)).
 pour_operation(pour(1, 3)).
@@ -289,3 +291,8 @@ pour_operation(pour(2, 1)).
 pour_operation(pour(2, 3)).
 pour_operation(pour(3, 1)).
 pour_operation(pour(3, 2)).
+
+
+goal(S) :-
+    s(InitialState),
+    search(InitialState, s0, S).

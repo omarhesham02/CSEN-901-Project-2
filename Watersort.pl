@@ -185,15 +185,6 @@ search(State, Situation, S) :-
     NewSituation = result(pour(From, To), Situation),
     search(NewState, NewSituation, S).
 
-
-pour_operation(pour(1, 2)).
-pour_operation(pour(1, 3)).
-pour_operation(pour(2, 1)).
-pour_operation(pour(2, 3)).
-pour_operation(pour(3, 1)).
-pour_operation(pour(3, 2)).
-
-
 goal(S) :-
     initial_state(InitialState),
     ids(InitialState, S).

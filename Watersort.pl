@@ -185,10 +185,23 @@ search(State, Situation, S) :-
     NewSituation = result(pour(From, To), Situation),
     search(NewState, NewSituation, S).
 
+situation_to_state(s0, State) :-
+    initial_state(State).
+
+situation_to_state(result(pour(From, To), RestSituation), State) :-
+    situation_to_state(RestSituation, IntermediateState),
+    pour(From, To, IntermediateState, State).
+
 goal(S) :-
+    nonvar(S),
+    situation_to_state(S, State),
+    is_goal_state(State),
+    !.
+
+goal(S) :-
+    var(S),
     initial_state(InitialState),
     ids(InitialState, S).
-
 
 ids(State, S) :-
     L = 0,
@@ -201,11 +214,3 @@ ids(State, S, L) :-
 ids(State, S, L) :-
     L1 is L + 1,
     ids(State, S, L1).
-
-
-
-
-
-
-    
-    

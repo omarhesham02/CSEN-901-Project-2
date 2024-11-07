@@ -161,20 +161,9 @@ is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3
     is_goal_bottle(bottle3(Top3, Bottom3)).
 
 
-is_goal_bottle(bottle1(Top1, Bottom1)) :-
-    (Top1 = e, Bottom1 \= e)
-    ;
-    (Top1 = Bottom1).
-
-is_goal_bottle(bottle2(Top2, Bottom2)) :-
-    (Top2 = e, Bottom2 \= e)
-    ;
-    (Top2 = Bottom2).
-
-is_goal_bottle(bottle3(Top3, Bottom3)) :-
-    (Top3 = e, Bottom3 \= e)
-    ;
-    (Top3 = Bottom3).
+is_goal_bottle(Bottle) :-
+    Bottle =.. [_, Top, Bottom],
+    (Top = e; Top = Bottom).
 
 search(State, Situation, S) :-
     is_goal_state(State),

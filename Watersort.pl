@@ -1,6 +1,4 @@
 :- consult('KB2.pl').
-:- dynamic bottle1/2, bottle2/2, bottle3/2.
-:- dynamic result/2.
 
 % ************************************************************ Pour Operations ************************************************************
 
@@ -178,19 +176,13 @@ is_goal_bottle(bottle3(Top3, Bottom3)) :-
     ;
     (Top3 = Bottom3).
 
-
-apply_pour(pour(From, To), State, NewState) :-
-    pour(From, To, State, NewState).
-
-
 search(State, Situation, S) :-
     is_goal_state(State),
     S = Situation.
 
 search(State, Situation, S) :-
-    pour_operation(Pour),
-    apply_pour(Pour, State, NewState),
-    NewSituation = result(Pour, Situation),
+    pour(From, To, State, NewState),
+    NewSituation = result(pour(From, To), Situation),
     search(NewState, NewSituation, S).
 
 

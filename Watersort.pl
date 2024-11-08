@@ -1,5 +1,60 @@
 :- consult('KB2.pl').
 
+% ************************************************************ Main Logic ************************************************************
+
+% Define the initial state from the KB
+initial_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
+    bottle1(Top1, Bottom1),
+    bottle2(Top2, Bottom2),
+    bottle3(Top3, Bottom3).
+
+
+is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
+    is_goal_bottle(bottle1(Top1, Bottom1)),
+    is_goal_bottle(bottle2(Top2, Bottom2)),
+    is_goal_bottle(bottle3(Top3, Bottom3)).
+
+
+is_goal_bottle(Bottle) :-
+    Bottle =.. [_, Top, Bottom],
+    (Top = e; Top = Bottom).
+
+search(State, Situation, S) :-
+    is_goal_state(State),
+    S = Situation.
+
+search(State, Situation, S) :-
+    pour(From, To, State, NewState),
+    NewSituation = result(pour(From, To), Situation),
+    search(NewState, NewSituation, S).
+
+situation_to_state(s0, State) :-
+    initial_state(State).
+
+situation_to_state(result(pour(From, To), RestSituation), State) :-
+    situation_to_state(RestSituation, IntermediateState),
+    pour(From, To, IntermediateState, State).
+
+goal(S) :-
+    nonvar(S),
+    situation_to_state(S, State),
+    is_goal_state(State),
+    !.
+
+goal(S) :-
+    var(S),
+    initial_state(InitialState),
+    ids(InitialState, S, 0).
+
+
+ids(State, S, L) :-
+    call_with_depth_limit(search(State, s0, S), L, R),
+    R \= depth_limit_exceeded.
+
+ids(State, S, L) :-
+    L1 is L + 1,
+    ids(State, S, L1).
+
 % ************************************************************ Pour Operations ************************************************************
 
 % Pour from bottle1 to bottle2
@@ -145,61 +200,3 @@ pour(3, 2, state(B1, bottle2(Top2, Bottom2), bottle3(Top3, Bottom3)), NewState) 
             NewState = state(B1, bottle2(e, Bottom3), bottle3(e, e))
         )
     ).
-
-% ************************************************************ Main Logic ************************************************************
-
-% Define the initial state from the KB
-initial_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
-    bottle1(Top1, Bottom1),
-    bottle2(Top2, Bottom2),
-    bottle3(Top3, Bottom3).
-
-
-is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
-    is_goal_bottle(bottle1(Top1, Bottom1)),
-    is_goal_bottle(bottle2(Top2, Bottom2)),
-    is_goal_bottle(bottle3(Top3, Bottom3)).
-
-
-is_goal_bottle(Bottle) :-
-    Bottle =.. [_, Top, Bottom],
-    (Top = e; Top = Bottom).
-
-search(State, Situation, S) :-
-    is_goal_state(State),
-    S = Situation.
-
-search(State, Situation, S) :-
-    pour(From, To, State, NewState),
-    NewSituation = result(pour(From, To), Situation),
-    search(NewState, NewSituation, S).
-
-situation_to_state(s0, State) :-
-    initial_state(State).
-
-situation_to_state(result(pour(From, To), RestSituation), State) :-
-    situation_to_state(RestSituation, IntermediateState),
-    pour(From, To, IntermediateState, State).
-
-goal(S) :-
-    nonvar(S),
-    situation_to_state(S, State),
-    is_goal_state(State),
-    !.
-
-goal(S) :-
-    var(S),
-    initial_state(InitialState),
-    ids(InitialState, S).
-
-ids(State, S) :-
-    L = 0,
-    ids(State, S, L).
-
-ids(State, S, L) :-
-    call_with_depth_limit(search(State, s0, S), L, R),
-    R \= depth_limit_exceeded.
-
-ids(State, S, L) :-
-    L1 is L + 1,
-    ids(State, S, L1).

@@ -28,43 +28,18 @@ is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3
     is_goal_bottle(bottle2(Top2, Bottom2)),
     is_goal_bottle(bottle3(Top3, Bottom3)).
 
-
-
-search(State, Situation, S) :-
+search(State, Situation, S, _) :-
     is_goal_state(State),
     S = Situation.
 
-search(State, Situation, S) :-
+search(State, Situation, S, Visited) :-
+    \+member(State, Visited),
     pour(From, To, State, NextState),
-    NextSituation = result(pour(From, To), Situation),
-    search(NextState, NextSituation, S).
-
-situation_to_state(s0, State) :-
-    initial_state(State).
-
-situation_to_state(result(pour(From, To), RestSituation), State) :-
-    situation_to_state(RestSituation, IntermediateState),
-    pour(From, To, IntermediateState, State).
+    search(NextState, result(pour(From, To), Situation), S, [State | Visited]).
 
 goal(S) :-
-    nonvar(S),
-    situation_to_state(S, State),
-    is_goal_state(State),
-    !.
-
-goal(S) :-
-    var(S),
     initial_state(InitialState),
-    ids(InitialState, S, 0).
-
-
-ids(State, S, L) :-
-    call_with_depth_limit(search(State, s0, S), L, R),
-    R \= depth_limit_exceeded.
-
-ids(State, S, L) :-
-    L1 is L + 1,
-    ids(State, S, L1).
+    search(InitialState, s0, S, []).
 
 % ************************************************************ Pour Operations ************************************************************
 

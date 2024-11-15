@@ -8,25 +8,25 @@ state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3)) :-
     bottle3(Top3, Bottom3).
 
 is_goal_bottle(bottle1(Top, Bottom)) :-
-    (Top = e) 
-    ; 
-    (Top = Bottom).
+    (Top = e, Bottom = e)
+    ;
+    (Bottom \= e, Top = Bottom).
 
 is_goal_bottle(bottle2(Top, Bottom)) :-
-    (Top = e) 
-    ; 
-    (Top = Bottom).
+    (Top = e, Bottom = e)
+    ;
+    (Bottom \= e, Top = Bottom).
 
 is_goal_bottle(bottle3(Top, Bottom)) :-
-    (Top = e) 
-    ; 
-    (Top = Bottom).
+    (Top = e, Bottom = e)
+    ;
+    (Bottom \= e, Top = Bottom).
 
 is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
     is_goal_bottle(bottle1(Top1, Bottom1)),
     is_goal_bottle(bottle2(Top2, Bottom2)),
     is_goal_bottle(bottle3(Top3, Bottom3)).
-
+        
 search(Situation, S) :-
     state(B1, B2, B3, Situation),
     State = state(B1, B2, B3),
@@ -39,12 +39,12 @@ search(Situation, S) :-
     search(NextSituation, S).
 
 ids(Situation, S, L) :-
-        call_with_depth_limit(search(Situation, S), L, R),
-        R \= depth_limit_exceeded.
+    call_with_depth_limit(search(Situation, S), L, R),
+    R \= depth_limit_exceeded.
     
 ids(Situation, S, L) :-
-        L1 is L + 1,
-        ids(Situation, S, L1).
+    L1 is L + 1,
+    ids(Situation, S, L1).
 
 goal(S) :-
     ids(s0, S, 0).

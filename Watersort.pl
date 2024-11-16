@@ -2,13 +2,8 @@
 
 % ************************************************************ Search ************************************************************
 
-is_goal_bottle(bottle1(e, e)).
 is_goal_bottle(bottle1(C, C)).
-
-is_goal_bottle(bottle2(e, e)).
 is_goal_bottle(bottle2(C, C)).
-
-is_goal_bottle(bottle3(e, e)).
 is_goal_bottle(bottle3(C, C)).
 
 

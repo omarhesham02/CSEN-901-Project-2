@@ -2,11 +2,6 @@
 
 % ************************************************************ Search ************************************************************
 
-state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3)) :-
-    bottle1(Top1, Bottom1),
-    bottle2(Top2, Bottom2),
-    bottle3(Top3, Bottom3).
-
 is_goal_bottle(bottle1(Top, Bottom)) :-
     (Top = e, Bottom = e)
     ;
@@ -22,16 +17,15 @@ is_goal_bottle(bottle3(Top, Bottom)) :-
     ;
     (Bottom \= e, Top = Bottom).
 
-is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3))) :-
+is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)) :-
     is_goal_bottle(bottle1(Top1, Bottom1)),
     is_goal_bottle(bottle2(Top2, Bottom2)),
     is_goal_bottle(bottle3(Top3, Bottom3)).
 
 
-    goal(S) :-
-        state(B1, B2, B3, S),
-        State = state(B1, B2, B3),
-        is_goal_state(State).
+goal(S) :-
+    state(B1, B2, B3, S),
+    is_goal_state(state(B1, B2, B3, S)).
 
 % ************************************************************ Successor State Axiom ************************************************************
 
@@ -130,45 +124,3 @@ state(bottle1(NewTop1, NewBottom1), bottle2(NewTop2, NewBottom2), bottle3(NewTop
     ).
 
 
-% ************************************************************ Experimentation ************************************************************
-
-search(Situation, S, _) :-
-    state(B1, B2, B3, Situation),
-    State = state(B1, B2, B3),
-    is_goal_state(State),
-    S = Situation.
-
-search(Situation, S, Visited) :-
-    state(B1, B2, B3, Situation),
-    State = state(B1, B2, B3),
-    \+ member(State, Visited),
-    A = pour(_, _),
-    NextSituation = result(A, Situation),
-    search(NextSituation, S, [State | Visited]).
-
-dls_with_visited_states(Situation, S, Depth, _) :-
-    Depth > 0,
-    state(B1, B2, B3, Situation),
-    State = state(B1, B2, B3), 
-    is_goal_state(State),
-    S = Situation.
-
-dls_with_visited_states(Situation, S, Depth, Visited) :-
-    Depth > 0,
-    NewDepth is Depth - 1,
-    state(B1, B2, B3, Situation),
-    State = state(B1, B2, B3),
-    \+ member(State, Visited),
-    A = pour(_, _),
-    NextSituation = result(A, Situation),
-    dls_with_visited_states(NextSituation, S, NewDepth, [State | Visited]).
-
-ids(Situation, S, L, MaxDepth, Visited) :-
-    L =< MaxDepth,
-    call_with_depth_limit(search(Situation, S, Visited), L, R),
-    R \= depth_limit_exceeded.
-
-ids(Situation, S, L, MaxDepth, _) :-
-    L = MaxDepth,
-    L1 is L + 1,
-    ids(Situation, S, L1, MaxDepth, []).

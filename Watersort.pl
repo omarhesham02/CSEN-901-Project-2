@@ -2,16 +2,7 @@
 
 % ************************************************************ Search ************************************************************
 
-is_goal_bottle(bottle1(C, C)).
-is_goal_bottle(bottle2(C, C)).
-is_goal_bottle(bottle3(C, C)).
-
-
-is_goal_state(state(B1, B2, B3, _)) :-
-    is_goal_bottle(B1),
-    is_goal_bottle(B2),
-    is_goal_bottle(B3).
-
+is_goal_state(state(bottle1(C1, C1), bottle2(C2, C2), bottle3(C3, C3), _)).
 
 goal(S) :-
     state(B1, B2, B3, S),

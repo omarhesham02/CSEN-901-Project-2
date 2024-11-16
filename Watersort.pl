@@ -2,25 +2,20 @@
 
 % ************************************************************ Search ************************************************************
 
-is_goal_bottle(bottle1(Top, Bottom)) :-
-    (Top = e, Bottom = e)
-    ;
-    (Bottom \= e, Top = Bottom).
+is_goal_bottle(bottle1(e, e)).
+is_goal_bottle(bottle1(C, C)).
 
-is_goal_bottle(bottle2(Top, Bottom)) :-
-    (Top = e, Bottom = e)
-    ;
-    (Bottom \= e, Top = Bottom).
+is_goal_bottle(bottle2(e, e)).
+is_goal_bottle(bottle2(C, C)).
 
-is_goal_bottle(bottle3(Top, Bottom)) :-
-    (Top = e, Bottom = e)
-    ;
-    (Bottom \= e, Top = Bottom).
+is_goal_bottle(bottle3(e, e)).
+is_goal_bottle(bottle3(C, C)).
 
-is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)) :-
-    is_goal_bottle(bottle1(Top1, Bottom1)),
-    is_goal_bottle(bottle2(Top2, Bottom2)),
-    is_goal_bottle(bottle3(Top3, Bottom3)).
+
+is_goal_state(state(B1, B2, B3, _)) :-
+    is_goal_bottle(B1),
+    is_goal_bottle(B2),
+    is_goal_bottle(B3).
 
 
 goal(S) :-

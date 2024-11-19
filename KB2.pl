@@ -1,3 +1,3 @@
-bottle1(e,e). 
-bottle2(e,e). 
-bottle3(e,b). 
+bottle1(e,b). 
+bottle2(b,r). 
+bottle3(e,r). 

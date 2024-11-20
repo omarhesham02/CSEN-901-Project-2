@@ -130,7 +130,7 @@ state(bottle1(NewTop1, NewBottom1), bottle2(NewTop2, NewBottom2), bottle3(NewTop
 
     A = pour(3, 1),
         (
-          Top3 \= e, Bottom3 \= e, Top1 = e, Bottom1 \= e,
+          Top3 \= e, Bottom3 \= e, Top1 = e, Bottom1 = Top3,
             NewTop3 = e, NewBottom3 = Bottom3, NewTop1 = Top3, NewBottom1 = Bottom1
         ; Top3 \= e, Bottom3 \= e, Top1 = e, Bottom1 = e,
             NewTop3 = e, NewBottom3 = Bottom3, NewTop1 = e, NewBottom1 = Top3
@@ -144,7 +144,7 @@ state(bottle1(NewTop1, NewBottom1), bottle2(NewTop2, NewBottom2), bottle3(NewTop
 
     A = pour(3, 2),
         (
-          Top3 \= e, Bottom3 \= e, Top2 = e, Bottom2 \= e,
+          Top3 \= e, Bottom3 \= e, Top2 = e, Bottom2 = Top3,
             NewTop3 = e, NewBottom3 = Bottom3, NewTop2 = Top3, NewBottom2 = Bottom2
         ; Top3 \= e, Bottom3 \= e, Top2 = e, Bottom2 = e,
             NewTop3 = e, NewBottom3 = Bottom3, NewTop2 = e, NewBottom2 = Top3

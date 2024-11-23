@@ -1,4 +1,4 @@
-:- consult('KB.pl').
+:- consult('KB2.pl').
 
 % ************************************************************ Helper Predicates ************************************************************
 
@@ -15,9 +15,7 @@ unique_colors([H|T], [H|T1]) :- H \= e, delete(T, H, T2), unique_colors(T2, T1).
 is_goal_state(state(bottle1(C1, C1), bottle2(C2, C2), bottle3(C3, C3), _)).
 
 can_lead_to_solution(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)) :-
-    is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)),
-    Top1 \= e, Bottom1 \= e, Top2 \= e, Bottom2 \= e, Top3 \= e, Bottom3 \= e.
-
+    is_goal_state(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)).
 
 can_lead_to_solution(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottle3(Top3, Bottom3), _)) :-
     Layers = [Top1, Bottom1, Top2, Bottom2, Top3, Bottom3],
@@ -44,7 +42,6 @@ can_lead_to_solution(state(bottle1(Top1, Bottom1), bottle2(Top2, Bottom2), bottl
   ).
 
 % ************************************************************ Goal Predicate ************************************************************
-
 
 goal(S) :-
     (

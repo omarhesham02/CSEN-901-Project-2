@@ -1,4 +1,4 @@
-:- consult('KB2.pl').
+:- consult('KB.pl').
 
 is_goal_state(state(bottle1(C1, C1), bottle2(C2, C2), bottle3(C3, C3), _)).
 
